@@ -27,5 +27,5 @@ navegar para página da empresa para obter esse valor)
 14. URL da candidatura (pode ser simplificada pelo Linkedin, ou um link
 externode direcionamento da vaga)
 
-# Código:
+# Código fonte do projeto:
 - [Clique aqui para ver o código em Python.](https://github.com/dev-daniel-amorim/WS-Projeto-Busca-Linkedin/blob/main/main.py)
