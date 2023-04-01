@@ -1,13 +1,14 @@
 # Web Scraping - Projeto busca Linkedin
 
-Este projeto tem objetivo de fazer uma busca automática no linkedin sem interferência humana que realize buscas no site por:
+Este projeto tem objetivo de fazer uma busca automática no linkedin sem interferência humana, primeiro devemos 
+definir os filtros como:
 
 - Brasil
 - Nome da vaga
 - Tempo integral
 - estágio
 
-Navega entre as páginas do linkedin e salvar um arquivo em formato .CSV contendo informações sobre:
+Navegar entre as páginas do linkedin e salvar um arquivo em formato .CSV contendo informações sobre:
 
 1. URL da vaga
 2. Nome da vaga
