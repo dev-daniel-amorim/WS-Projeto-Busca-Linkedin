@@ -1,14 +1,14 @@
 # Web Scraping - Projeto busca Linkedin
 
-Este projeto tem objetivo de fazer uma busca automática no linkedin sem interferência humana, primeiro devemos 
-definir os filtros como:
+Este é um projeto de Web Scraping utilizando Selenium e tem objetivo de criar uma busca automatizada na página do linkedin, 
+nele vamos preencher na página principal da busca alguns filtros:
 
-- Brasil
-- Nome da vaga
-- Tempo integral
-- estágio
+- País: Brasil
+- Nome da vaga: (Nome da vaga no código)
+- Tipo de vaga: Tempo integral
+- Nível de experiância: Estágio
 
-Navegar entre as páginas do linkedin e salvar um arquivo em formato .CSV contendo informações sobre:
+Depois iremos navegar entre as páginas do linkedin e ir salvando em um arquivos CSV as informações coletadas abaixo:
 
 1. URL da vaga
 2. Nome da vaga
@@ -27,5 +27,13 @@ navegar para página da empresa para obter esse valor)
 14. URL da candidatura (pode ser simplificada pelo Linkedin, ou um link
 externode direcionamento da vaga)
 
-# Código fonte do projeto:
+O código deverá estar preparado para queda de energia, desligamento do sistema ou queda da rede de internet, e deverá
+continuar a busca de onde parou após ser reiniciado.
+
+### Código fonte do projeto:
 - [Clique aqui para ver o código em Python.](https://github.com/dev-daniel-amorim/WS-Projeto-Busca-Linkedin/blob/main/main.py)
+
+<br>
+<hr>
+
+[<< Voltar](https://github.com/dev-daniel-amorim/Topico-Selenium_e_WS)
