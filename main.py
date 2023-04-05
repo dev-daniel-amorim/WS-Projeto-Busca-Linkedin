@@ -11,6 +11,7 @@ O caminho do main.py (mesma do requerimento) deve ser:
 k:\ProjetosPython\Projetos\Desafio\DanielAmorim
 é no main.py do pycharm que este código deve ser colado (limpar o main.py antes).
 '''
+
 # ----------------------CONSIDERAÇÕES------------------------------------------------
 '''
  Para evitar block e cair na tela de login usei navegador anônimo e useragent.
@@ -39,6 +40,7 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 
+
 servico = Service(ChromeDriverManager().install())
 
 from selenium.webdriver.common.by import By
@@ -50,7 +52,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # User agent para tentar minimizar bloqueios usando agent randomico
 from fake_useragent import UserAgent
-
 user_agent = UserAgent().random
 
 # Configurar as opções do Chrome
@@ -72,6 +73,7 @@ import os
 import tkinter as tk
 import sys
 
+
 # -------------- DEFININDO AS VARIÁVEIS -----------------------------------------------------
 
 wait_time = 5  # Tempo de espera do webdriverwait
@@ -86,8 +88,65 @@ arq_scraping = "Scraping - Daniel de Souza Amorim.csv"
 arq_print = "Filtros do linkedin - Daniel de Souza Amorim.png"
 
 # time randomico entre 1, 5
-tempo_random = random.uniform(1, 5)
+tempo_random = random.uniform(1, 3)
 
+# ------------------DEFININDO CLASSES E FUNÇÕES -------------------
+
+# CLASSE PAI: CLASSE CONSTRUTORA
+class Acao_elementos:
+
+    def __init__(self, elemento, cmd_do_key):
+        self.elemento = elemento
+        self.cmd = cmd_do_key
+        if cmd_do_key == "click":
+            time.sleep(tempo_random)
+            self.elemento.click()
+        else:
+            time.sleep(tempo_random)
+            self.elemento.send_keys(self.cmd)
+
+# CLASSE FILHA: USADO SOMENTE PARA EXEMPLIFICAR USO DE CLASSE COM HERANÇA
+class Execute(Acao_elementos):
+    def __init__(self, elemento , cmd_list):
+        for cmd in cmd_list:
+            super().__init__(elemento, cmd)
+
+# FUNÇÃO FILTRA VAGAS NA TELA PRNCIPAL
+def filtrar_vaga(contador):
+    try:
+        # PREENCHE PAIS
+        elemento = navegador.find_element(By.ID, 'job-search-bar-location')
+        cmd_list = [Keys.ESCAPE, pais_busca, Keys.ARROW_DOWN, Keys.ENTER]
+        Execute(elemento, cmd_list)
+        # PREENCHE NOME DA VAGA
+        elemento = navegador.find_element(By.ID, "job-search-bar-keywords")
+        cmd_list = [Keys.ESCAPE, vaga_busca, Keys.ENTER]
+        Execute(elemento, cmd_list)
+        # SELECIONA TEMPO INTEGRAL
+        navegador.find_element(By.XPATH, '//*[@id="jserp-filters"]/ul/li[4]/div/div/button').click()
+        elemento = navegador.find_element(By.ID, 'f_JT-0')
+        cmd_list = ["click", Keys.ENTER]
+        Execute(elemento, cmd_list)
+        # SELECIONA ESTÁGIO
+        navegador.find_element(By.XPATH, '//*[@id="jserp-filters"]/ul/li[5]/div/div/button').click()
+        elemento = navegador.find_element(By.ID, 'f_E-0')
+        cmd_list = ["click", Keys.ENTER]
+        Execute(elemento, cmd_list)
+        # PRINT SCREEN DO FILTRO
+        navegador.save_screenshot(arq_print)
+        time.sleep(1)
+        return
+    except:
+        if contador < 3:
+            navegador.get(link_da_busca)
+            contador += 1
+            print(f"Tentativa {contador} falhou, tentando novamente...")
+            filtrar_vaga(contador)
+            return
+        else:
+            print("Site bloqueou o scraping, tente mais tarde!")
+            navegador.close()
+            sys.exit(1)
 
 # FUNÇÃO DA JANELA OPÇÃO REINICIAR
 def resposta_reiniciar():
@@ -122,6 +181,7 @@ if os.path.exists(arquivo_temp):
     janela = tk.Tk()
     janela.title("Escolha uma opção")
     janela.geometry("320x155")
+
     # LABEL
     label = tk.Label(janela, text="Continuar a busca de onde parou?\n \n"
                                   "ATENÇÃO: Se reiniciar, excluirá o arquivo CSV da busca\n"
@@ -144,68 +204,6 @@ if os.path.exists(arquivo_temp):
     # CENTRALIZANDO A JANELA
     janela.geometry("+%d+%d" % (x, y))
     janela.mainloop()
-
-
-# PREENCHENDO OS FILTROS DE BUSCA
-def preencher_filtros(contador):
-    try:
-        time.sleep(tempo_random)
-
-        # PREENCHENDO PAÍS
-        pais = navegador.find_element(By.ID, 'job-search-bar-location')
-        pais.clear()
-        pais.send_keys(pais_busca)
-        time.sleep(1)
-        pais.send_keys(Keys.ARROW_DOWN)
-        time.sleep(1)
-        pais.send_keys(Keys.ENTER)
-        time.sleep(2)
-
-        # PREECHENDO VAGA
-        area = navegador.find_element(By.ID, "job-search-bar-keywords")
-        area.clear()
-        time.sleep(0.5)
-        area.send_keys(vaga_busca)
-        time.sleep(3)
-        # area.send_keys(Keys.ARROW_DOWN)
-        # time.sleep(1)
-        area.send_keys(Keys.ENTER)
-        time.sleep(2)
-
-        # SELECIONANDO TIPO DE VAGA
-        navegador.find_element(By.XPATH, '//*[@id="jserp-filters"]/ul/li[4]/div/div/button').click()
-        time.sleep(2)
-        vaga = navegador.find_element(By.ID, 'f_JT-0')
-        time.sleep(1)
-        vaga.click()
-        time.sleep(1)
-        vaga.send_keys(Keys.ENTER)
-        time.sleep(2)
-
-        # SELECIONANDO ESTAGIO
-        navegador.find_element(By.XPATH, '//*[@id="jserp-filters"]/ul/li[5]/div/div/button').click()
-        time.sleep(2)
-        estagio = navegador.find_element(By.ID, 'f_E-0')
-        time.sleep(1)
-        estagio.click()
-        time.sleep(1)
-        estagio.send_keys(Keys.ENTER)
-        time.sleep(3)
-
-        # PRINT SCREEN DO FILTRO
-        navegador.save_screenshot(arq_print)
-        time.sleep(1)
-
-    except:
-        while contador < 3:
-            time.sleep(tempo_random)
-            navegador.get(link_da_busca)
-            contador += 1
-            print(f"Tentativa {contador} falhou, tentando novamente...")
-            preencher_filtros(contador)
-        print("Site bloqueou o scraping, tente mais tarde!")
-        navegador.close()
-        sys.exit(1)
 
 
 # SCROLL NA PÁGINA
@@ -244,7 +242,6 @@ def scroll_fake():
     navegador.execute_script("window.scrollBy(0, 400)")
     return
 
-
 # SALVANDO ARQUIVO CSV
 def salvar_csv(resultados):
     lista_da_busca = pd.DataFrame(resultados, columns=["Url vaga Linkedin", "Nome da vaga", "Empresa contratante",
@@ -255,7 +252,6 @@ def salvar_csv(resultados):
                                                        "Quantidade seguidores", "Local sede", "Url candidatura"])
     lista_da_busca.to_csv(arq_scraping, encoding='ANSI', sep=';', index=False)
     return
-
 
 # LISTAS
 tupla_resultados = []
@@ -277,13 +273,28 @@ with open('temp_progress.txt', 'a+') as p:
     for linha in p:
         lista_vaga_ja_lida.append(linha.replace("\n", ""))
 
-# ABRE O NAVEGADOR NO LINK DA BUSCA
-navegador.get(link_da_busca)
-time.sleep(2)
+print('Quantidade de vagas já analisadas:', len(lista_vaga_ja_lida))
 
-# PREENCHER FILTROS
-contador = 0
-preencher_filtros(contador)
+
+indice_ult = int(len(lista_vaga_ja_lida))
+
+if indice_ult == 0:
+    # ABRE O NAVEGADOR NO LINK DA BUSCA
+    navegador.get(link_da_busca)
+    time.sleep(2)
+
+
+    # CHAMA FUNÇÃO FILTRAR VAGAS
+    contador = 0
+    filtrar_vaga(contador)
+    # PEGA URL DO FILTRO
+    url_do_filtro = navegador.current_url
+    # Salva progresso de leitura
+    with open('temp_progress.txt', 'a') as f:
+        f.write(f'{url_do_filtro}' + '\n')
+else:
+    url = lista_vaga_ja_lida[0]
+    navegador.get(url)
 
 # PEGA ELEMENTOS QUE CONTÉM AS VAGAS (auxilia no scroll até o fim da página)
 element_de_vagas = navegador.find_elements(By.CLASS_NAME, "job-search-card")
@@ -298,7 +309,7 @@ except:
     navegador.close()
     sys.exit(1)
 
-print(f"Encontramos {len(element_de_vagas)} vagas para {vaga_busca}, iniciando scraping...")
+print(f"Encontramos {len(element_de_vagas)} em {vaga_busca}, iniciando...")
 
 # VERIFICA ULTIMO ÍNDICE DA VAGA LIDA E CONTINUA OU INICIA
 indice_ult = int(len(lista_vaga_ja_lida))
@@ -313,6 +324,7 @@ for elem in element_de_vagas[indice_ult:]:
     with open('temp_progress.txt', 'a') as f:
         f.write(f'{indice_ult}' + '\n')
 
+    time.sleep(1)
     try:
         # clica em um elemento da lista para exibir o painel de informações
         scroll_fake()
