@@ -139,6 +139,7 @@ def filtrar_vaga(contador):
     except:
         if contador < 3:
             navegador.get(link_da_busca)
+            time.sleep(3)
             contador += 1
             print(f"Tentativa {contador} falhou, tentando novamente...")
             filtrar_vaga(contador)
@@ -212,6 +213,7 @@ def scroll_ate_ttl_vagas(qnt_de_vagas, element_de_vagas):
     Função executa scroll na página atá que a quantidade de elementos
     correspondam a mesma quantidade de vagas disponíveis.
     '''
+    print("Realizando scroll na página para pegar todas as vagas...")
     while float(qnt_de_vagas) >= int(len(element_de_vagas)):
         # executar um script JavaScript para fazer o scroll na página
         navegador.execute_script("window.scrollTo(0, document.body.scrollHeight);")
